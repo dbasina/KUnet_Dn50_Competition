@@ -31,6 +31,18 @@ def select_model(args, device):
             if k.find("model.") >= 0:
                 new_state_dict[k.replace("model.", "")] = v
         model.load_state_dict(new_state_dict, strict=True)
+    elif model_id == 3:
+        # KUnet
+        from models.team03_KUnet import KUnet  
+        name, data_range = "03_KUnet", 1.0  
+        model_path = os.path.join('model_zoo', 'team03_KUnet.pth')
+        model = KUnet()  
+        checkpoint = torch.load(model_path, map_location=device)
+        if "model_state_dict" in checkpoint:
+            state_dict = checkpoint["model_state_dict"]
+        else:
+            state_dict = checkpoint
+        model.load_state_dict(state_dict, strict=True)
     else:
         raise NotImplementedError(f"Model {model_id} is not implemented.")
 
